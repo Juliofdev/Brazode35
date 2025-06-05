@@ -11,6 +11,9 @@ import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import PlaningScreen from "../screens/planes/PlaningScreen";
 import PlanFreeScreen from "../screens/planes/PlanFreeScreen";
+import ActividadScreen from "../screens/main/ActividadScreen";
+import CalendarScreen from "../screens/main/CalendarScreen";
+import PerfilScreen from "../screens/main/PerfilScreen";
 
 const tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -18,8 +21,10 @@ const Stack = createNativeStackNavigator();
 function MyTabs(){
     return(
         <tab.Navigator>
-            <tab.Screen name="Home" component={HomeScreen} />
-            <tab.Screen name = "Settings" component={SettingsScreen}/>
+            <tab.Screen name="Inicio" component={HomeScreen} />
+            <tab.Screen name="Actividad" component={ActividadScreen} />
+            <tab.Screen name="Calendario" component={CalendarScreen} />
+            <tab.Screen name = "Perfil" component={PerfilScreen}/>
         </tab.Navigator>
     );
 }

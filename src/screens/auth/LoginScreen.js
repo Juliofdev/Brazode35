@@ -1,4 +1,4 @@
-// screens/LoginScreen.js
+// /src/screens/auth/LoginScreen.js
 // ip local 192.168.18.35
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";

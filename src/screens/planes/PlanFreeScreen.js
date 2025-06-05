@@ -1,4 +1,4 @@
-//screens/PlanFreeScreen.js
+// /src/screens/planes/PlanFreeScreen.js
 import React, { useState } from 'react';
 import { View, Text, Dimensions, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Ionicons} from '@expo/vector-icons';
@@ -237,7 +237,7 @@ export default function PlanFreeScreen(){
                 ¡Gracias por unirte! Ahora sí, a ver si aguantas los 30 días... ¡no te rajes antes!
                 </Text>
 
-                <TouchableOpacity style={styles.boton} onPress={() => cambiarVista(1)}>
+                <TouchableOpacity style={styles.boton} onPress={() => navigation.replace('Maintabs')}>
                 <Text style={styles.textoBoton}>Continuar</Text>
                 </TouchableOpacity>
             </View>

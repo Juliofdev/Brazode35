@@ -1,7 +1,7 @@
 import React from "react";
-import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
+import {View, Text, StyleSheet, TouchableOpacity, Settings} from "react-native";
 
-const HomeScreen = () => {
+const PerfilScreen = () => {
     return (
         <View>
         <Text style={{
@@ -9,9 +9,9 @@ const HomeScreen = () => {
             textAlign: "center",
             marginTop: "20%"
         }}
-        >Inicio Screen</Text>
+        >Perfil Screen</Text>
         </View>
     );
     }
 
-export default HomeScreen;
+export default PerfilScreen;

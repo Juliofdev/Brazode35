@@ -1,4 +1,4 @@
-//screens/PlaningScreen.js
+// /src/screens/planes/PlaningScreen.js
 import React from "react";
 import { View, Text, Dimensions, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
 
