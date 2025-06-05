@@ -1,10 +1,14 @@
 // /src/screens/auth/LoginScreen.js
 // ip local 192.168.18.35
+
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons,AntDesign, FontAwesome } from '@expo/vector-icons';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { Ionicons, AntDesign, FontAwesome } from '@expo/vector-icons'; // Íconos para la UI
 
-
+// Función para alertar funciones no disponibles
+const mostrarAlerta = () => {
+    Alert.alert("🚧 Función en desarrollo", "Estamos trabajando para traerla lo antes posible.");
+};
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
@@ -13,99 +17,92 @@ export default function LoginScreen({ navigation }) {
     return (
         <View style={styles.container}>
 
-        {/* Flecha para regresar a Welcome */}
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Welcome')}>
-            <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
+            {/* Flecha para regresar a Welcome */}
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Welcome')}>
+                <Ionicons name="arrow-back" size={24} color="black" />
+            </TouchableOpacity>
 
-        {/* Título */}
-        <Text style={styles.title}>Iniciar Sesión</Text>
+            {/* Título */}
+            <Text style={styles.title}>Iniciar Sesión</Text>
 
-        {/* Input email */}
-        <TextInput
-            style={styles.input}
-            placeholder="Introduce tu correo"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-        />
+            {/* Input email */}
+            <TextInput
+                style={styles.input}
+                placeholder="Introduce tu correo"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+            />
 
-        {/* Input clave */}
-        <TextInput
-            style={styles.input}
-            placeholder="Introduce tu clave"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={true}
-            autoCapitalize="none"
-        />
+            {/* Input clave */}
+            <TextInput
+                style={styles.input}
+                placeholder="Introduce tu clave"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={true}
+                autoCapitalize="none"
+            />
 
-        {/* Botón continuar */}
-        <TouchableOpacity
-            style={styles.button}
-            onPress={async () => {
-            if (!email || !password) {
-                alert("Por favor completa todos los campos");
-                return;
-            }
+            {/* Botón continuar */}
+            <TouchableOpacity
+                style={styles.button}
+                onPress={async () => {
+                    if (!email || !password) {
+                        alert("Por favor completa todos los campos");
+                        return;
+                    }
 
-            try {
-                const response = await fetch("http://192.168.18.35/brazode35_api/login.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-                });
+                    try {
+                        const response = await fetch("http://192.168.18.35/brazode35_api/login.php", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email, password }),
+                        });
 
-                const data = await response.json();
-                if (data.success) {
-                alert("Bienvenido " + data.user.nombre);
-                navigation.replace("Planing"); // redirige a tu pantalla principal
-                } else {
-                alert(data.message);
-                }
-            } catch (error) {
-                console.error(error);
-                alert("No se pudo conectar al servidor.");
-            }
-            }}
+                        const data = await response.json();
+                        if (data.success) {
+                            alert("Bienvenido " + data.user.nombre);
+                            navigation.replace("Planing"); // Redirige a pantalla principal
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        alert("No se pudo conectar al servidor.");
+                    }
+                }}
+            >
+                <Text style={styles.buttonText}>Continuar</Text>
+            </TouchableOpacity>
 
-        ><Text style={styles.buttonText}>Continuar</Text>
-        </TouchableOpacity>
+            {/* Botón para ir a Register */}
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                <Text style={styles.registerText}>¿Aún no tienes cuenta? Crear Cuenta</Text>
+            </TouchableOpacity>
 
-        {/* Texto Lorem Ipsum */}
-        <Text style={styles.lorem}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-            facilisis ultricies sem, et ultrices erat convallis non. Nulla facilisi.
-        </Text>
+            {/* Contenedor de iconos sociales */}
+            <View style={styles.socialIconsContainer}>
+                <TouchableOpacity style={styles.iconButton} onPress={mostrarAlerta}>
+                    <AntDesign name="google" size={24} color="#fff" />
+                </TouchableOpacity>
 
-        {/* Botón para ir a Register */}
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.registerText}>Flacow ¿Aun no tienes cuenta? Crear Cuenta</Text>
-        </TouchableOpacity>
+                <TouchableOpacity style={styles.iconButton} onPress={mostrarAlerta}>
+                    <AntDesign name="apple1" size={24} color="#fff" />
+                </TouchableOpacity>
 
-        {/* Contenedor de iconos sociales */}
-        <View style={styles.socialIconsContainer}>
-        <TouchableOpacity style={styles.iconButton}>
-            <AntDesign name="google" size={24} color="#fff" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.iconButton}>
-            <AntDesign name="apple1" size={24} color="#fff" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.iconButton}>
-            <FontAwesome name="facebook" size={24} color="#fff" />
-        </TouchableOpacity>
-        </View>
+                <TouchableOpacity style={styles.iconButton} onPress={mostrarAlerta}>
+                    <FontAwesome name="facebook" size={24} color="#fff" />
+                </TouchableOpacity>
+            </View>
 
         </View>
     );
-    }
+}
 
-    const styles = StyleSheet.create({
+// Estilos del componente
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
@@ -138,33 +135,26 @@ export default function LoginScreen({ navigation }) {
         color: '#ffffff',
         fontWeight: 'bold',
     },
-    lorem: {
-        fontSize: 14,
-        color: "#555",
-        lineHeight: 20,
-        marginBottom: 20,
-    },
     registerText: {
         color: "#007bff",
         fontSize: 16,
         textAlign: "center",
+        marginTop: 15,
         textDecorationLine: "underline",
     },
     socialIconsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 20,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 20,
     },
-
     iconButton: {
-    backgroundColor: '#E03B2E',
-    padding: 12,
-    borderRadius: 10,
-    marginHorizontal: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 50,
-    height: 50,
+        backgroundColor: '#E03B2E',
+        padding: 12,
+        borderRadius: 10,
+        marginHorizontal: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 50,
+        height: 50,
     },
-
 });

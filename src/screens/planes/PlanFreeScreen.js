@@ -1,92 +1,104 @@
 // /src/screens/planes/PlanFreeScreen.js
 import React, { useState } from 'react';
 import { View, Text, Dimensions, TouchableOpacity, StyleSheet, Image } from "react-native";
-import { Ionicons} from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-const { width, height } = Dimensions.get('window');
+// Obtener ancho de pantalla para dimensionar imágenes proporcionalmente
+const { width } = Dimensions.get('window');
 
-
-
-export default function PlanFreeScreen(){
+export default function PlanFreeScreen() {
+    // Hook para navegación entre pantallas
     const navigation = useNavigation();
+
+    // Estado para controlar la vista actual (1 a 4)
     const [vista, setVista] = useState(1);
+
+    // Estado para almacenar el historial de vistas para navegación atrás
     const [historial, setHistorial] = useState([1]);
+
+    // Estado para controlar si el usuario acepta términos
     const [aceptaTerminos, setAceptaTerminos] = useState(false);
 
-
+    // Función para cambiar a una vista específica
+    // Actualiza el historial para permitir volver atrás correctamente
     const cambiarVista = (nuevaVista) => {
-    setHistorial((h) => {
+        setHistorial((h) => {
+        // Verificar si la vista ya está en el historial
         const indiceExistente = h.lastIndexOf(nuevaVista);
         if (indiceExistente !== -1) {
-        // La vista ya está en el historial: recortamos hasta ahí
-        const nuevoHistorial = h.slice(0, indiceExistente + 1);
-        setVista(nuevaVista);
-        return nuevoHistorial;
+            // Si existe, recortar historial para eliminar vistas posteriores
+            const nuevoHistorial = h.slice(0, indiceExistente + 1);
+            setVista(nuevaVista);
+            return nuevoHistorial;
         } else {
-        // No está en el historial, agregamos al final
-        setVista(nuevaVista);
-        return [...h, nuevaVista];
+            // Si no existe, agregar al historial y cambiar vista
+            setVista(nuevaVista);
+            return [...h, nuevaVista];
         }
-    });
+        });
     };
 
+    // Función para regresar a la vista anterior según historial
     const regresarVista = () => {
-    setHistorial((h) => {
+        setHistorial((h) => {
         if (h.length > 1) {
-        const nuevoHistorial = h.slice(0, h.length - 1);
-        setVista(nuevoHistorial[nuevoHistorial.length - 1]);
-        return nuevoHistorial;
+            // Quitar última vista del historial
+            const nuevoHistorial = h.slice(0, h.length - 1);
+            // Cambiar a la vista anterior
+            setVista(nuevoHistorial[nuevoHistorial.length - 1]);
+            return nuevoHistorial;
         }
-        return h;
-    });
+        return h; // Si no hay historial, no hacer nada
+        });
     };
 
-
-    return(
+    return (
         <View style={styles.container}>
-            {/* Flecha para regresar a Welcome */}
-            <View>
-            <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => {
-                if (vista === 1) {
-                    navigation.replace('Planing');
-                } else {
-                    regresarVista();
-                }
-                }}
-            >
-                <Ionicons name="arrow-back" size={24} color="black" />
-            </TouchableOpacity>
-            </View>
-            
-            {/* Vista inicial */}
-            {vista === 1 && (
-            <View style={styles.vista}>
-                {/* Icono + título */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-                    <Image
-                        source={require('../../../assets/Plan_free.png')}
-                        style={{
-                        width: width * 0.25,     // 25% del ancho de pantalla
-                        height: width * 0.25,    // cuadrada y responsiva
-                        marginRight: 12,
-                        resizeMode: 'contain',
-                        }}
-                    />
-                <View style={{ flex: 1 }}>
-                    <Text style={styles.headerTitle}>
-                    ¿Pa’ qué pagar si puedes empezar gratis, flacow?
-                    </Text>
-                    <Text style={styles.subtext}>
-                    Aquí no hay excusas, ni pretextos. Son 30 días pa’ que por fin te decidas a moverte y dejes de decir “el lunes empiezo”.
-                    </Text>
-                </View>
-                </View>
 
-                {/* Contenido del plan */}
-                <View style={{ alignSelf: 'flex-start' }}>
+        {/* Botón para regresar a la pantalla anterior o salir */}
+        <View>
+            <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => {
+                if (vista === 1) {
+                // Si estamos en la primera vista, salir a pantalla Planing
+                navigation.replace('Planing');
+                } else {
+                // Si no, regresar a la vista anterior
+                regresarVista();
+                }
+            }}
+            >
+            {/* Icono flecha atrás */}
+            <Ionicons name="arrow-back" size={24} color="#E03B2E" />
+            </TouchableOpacity>
+        </View>
+
+        {/* VISTA 1: Introducción al plan gratuito */}
+        {vista === 1 && (
+            <View style={styles.vista}>
+            {/* Contenedor principal con imagen y texto lado a lado */}
+            <View style={styles.introContainer}>
+                <Image
+                source={require('../../../assets/Plan_free.png')} // Ruta imagen plan gratis
+                style={styles.introImage}
+                />
+                <View style={styles.introTextContainer}>
+                {/* Título destacado */}
+                <Text style={styles.headerTitle}>
+                    ¿Pa’ qué pagar si puedes empezar gratis, flacow?
+                </Text>
+
+                {/* Texto descriptivo explicativo */}
+                <Text style={styles.subtext}>
+                    Aquí no hay excusas, ni pretextos. Son 30 días pa’ que por fin te decidas a moverte y dejes de decir “el lunes empiezo”.
+                </Text>
+                </View>
+            </View>
+
+            {/* Detalles del plan con formato negrita para título y normal para descripción */}
+            <View style={styles.detailContainer}>
                 <Text style={styles.boldItem}>– Rutina diaria de 30 días:</Text>
                 <Text style={styles.regularItem}>No hay pierde, cada día te digo qué hacer. Si te pierdes, es porque quieres.</Text>
 
@@ -104,22 +116,23 @@ export default function PlanFreeScreen(){
 
                 <Text style={styles.boldItem}>– Motivación diaria:</Text>
                 <Text style={styles.regularItem}>Un jalón de orejas todos los días, porque sé que te gusta aflojar.</Text>
-                </View>
-
-                {/* Botón continuar */}
-                <TouchableOpacity style={styles.boton} onPress={() => cambiarVista(2)}>
-                <Text style={styles.textoBoton}>Continuar</Text>
-                </TouchableOpacity>
             </View>
-            )}
 
+            {/* Botón para continuar a la siguiente vista */}
+            <TouchableOpacity style={styles.boton} onPress={() => cambiarVista(2)}>
+                <Text style={styles.textoBoton}>Continuar</Text>
+            </TouchableOpacity>
+            </View>
+        )}
 
-            {/* Descripcion de aprendisaje*/}
-            {vista === 2 && (
+        {/* VISTA 2: Qué aprenderás en el plan */}
+        {vista === 2 && (
             <View style={styles.vista}>
-                <Text style={styles.titulo}>¿Qué vas a aprender en estos 30 días?</Text>
+            {/* Título grande */}
+            <Text style={styles.titulo}>¿Qué vas a aprender en estos 30 días?</Text>
 
-                <View style={{ alignSelf: 'flex-start' }}>
+            {/* Lista con títulos en negrita y texto descriptivo */}
+            <View style={styles.detailContainer}>
                 <Text style={styles.boldItem}>– Hacer bien los básicos:</Text>
                 <Text style={styles.regularItem}>Pa’ que lo esencial no te parezca que te va a caer y te lagartijees solo en el colapso.</Text>
 
@@ -134,10 +147,13 @@ export default function PlanFreeScreen(){
 
                 <Text style={styles.boldItem}>– Escuchar tu cuerpo:</Text>
                 <Text style={styles.regularItem}>Si te duele, descansa. Si no, ¡dale con todo!</Text>
-                </View>
+            </View>
 
-                <Text style={[styles.titulo, { fontSize: 18, marginTop: 20 }]}>¿Cómo se ve la semana?</Text>
-                <View style={{ alignSelf: 'flex-start' }}>
+            {/* Título para semana */}
+            <Text style={[styles.titulo, { fontSize: 18, marginTop: 30 }]}>¿Cómo se ve la semana?</Text>
+
+            {/* Desglose semanal de actividades */}
+            <View style={styles.weekContainer}>
                 <Text style={styles.regularItem}>– Lunes: Full body y tutor</Text>
                 <Text style={styles.regularItem}>– Martes: Piernas, pa’ que no te quedes con palillos</Text>
                 <Text style={styles.regularItem}>– Miércoles: HIIT, pa’ que sientas el poder</Text>
@@ -145,78 +161,83 @@ export default function PlanFreeScreen(){
                 <Text style={styles.regularItem}>– Viernes: Glúteos y cardio, pa’ que te duela sentarte</Text>
                 <Text style={styles.regularItem}>– Sábado: Cardio de descanso activo, según cómo amaneces</Text>
                 <Text style={styles.regularItem}>– Domingo: Descanso, pero no te la pases echado todo el día</Text>
-                </View>
+            </View>
 
-                <TouchableOpacity style={styles.boton} onPress={() => cambiarVista(3)}>
+            {/* Botón para ver calendario */}
+            <TouchableOpacity style={styles.boton} onPress={() => cambiarVista(3)}>
                 <Text style={styles.textoBoton}>Ver Calendario</Text>
-                </TouchableOpacity>
+            </TouchableOpacity>
             </View>
-            )}
+        )}
 
-
-            {/* Calendario*/}
-            {vista === 3 && (
+        {/* VISTA 3: Calendario y aceptación de términos */}
+        {vista === 3 && (
             <View style={styles.vista}>
-                <Text style={styles.titulo}>Calendario</Text>
-                <Text style={{ fontSize: 16, marginBottom: 10 }}>Junio 2025</Text>
+            {/* Título */}
+            <Text style={styles.titulo}>Calendario</Text>
 
-                {/* Tabla simple simulando el calendario */}
-                <View style={{ marginBottom: 20 }}>
-                <Text style={styles.regularItem}>SUN  MON  TUE  WED  THU  FRI  SAT</Text>
-                <Text style={styles.regularItem}>29    30     1     2     3     4     5</Text>
-                <Text style={styles.regularItem}>6     7     8     9    10    11   12</Text>
-                <Text style={styles.regularItem}>13   14    15    16   17    18   19</Text>
-                <Text style={styles.regularItem}>20   21    22    23   24    25   26</Text>
-                <Text style={styles.regularItem}>27   28    29    30</Text>
+            {/* Mes visible */}
+            <Text style={styles.monthText}>Junio 2025</Text>
+
+            {/* Calendario en forma de tabla con días de la semana */}
+            <View style={styles.calendarContainer}>
+                <View style={styles.calendarRow}>
+                <Text style={styles.calendarHeader}>SUN</Text>
+                <Text style={styles.calendarHeader}>MON</Text>
+                <Text style={styles.calendarHeader}>TUE</Text>
+                <Text style={styles.calendarHeader}>WED</Text>
+                <Text style={styles.calendarHeader}>THU</Text>
+                <Text style={styles.calendarHeader}>FRI</Text>
+                <Text style={styles.calendarHeader}>SAT</Text>
                 </View>
 
-                <Text style={styles.subtext}>
-                ¿Listo o vas a seguir viendo memes?
-                </Text>
-                <Text style={styles.regularItem}>
-                Con este plan, mínimo te vas a reír, sudar y sentir que ya no eres el mismo flacow de siempre. ¡Dale, que es gratis!
-                </Text>
+                {/* Filas del calendario con números */}
+                {[
+                [29, 30, 1, 2, 3, 4, 5],
+                [6, 7, 8, 9, 10, 11, 12],
+                [13, 14, 15, 16, 17, 18, 19],
+                [20, 21, 22, 23, 24, 25, 26],
+                [27, 28, 29, 30, 1, 2, 3],
+                ].map((week, i) => (
+                <View key={i} style={styles.calendarRow}>
+                    {week.map((day, j) => (
+                    <Text key={j} style={styles.calendarDay}>{day}</Text>
+                    ))}
+                </View>
+                ))}
+            </View>
 
-                {/* Checkbox */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
-                <TouchableOpacity
+            {/* Checkbox para aceptar términos */}
+            <TouchableOpacity
+                style={styles.checkboxContainer}
                 onPress={() => setAceptaTerminos(!aceptaTerminos)}
-                style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}
-                >
-                <Ionicons
-                    name={aceptaTerminos ? "checkbox" : "square-outline"}
-                    size={24}
-                    color={aceptaTerminos ? "#E03B2E" : "#aaa"}
-                />
-                <Text style={{ marginLeft: 8, color: aceptaTerminos ? "#000" : "#666" }}>
-                    Acepto términos y condiciones
-                </Text>
-                </TouchableOpacity>
+            >
+                {/* Cuadro del checkbox */}
+                <View style={[styles.checkbox, aceptaTerminos && styles.checkboxChecked]}>
+                {/* Mostrar check si está marcado */}
+                {aceptaTerminos && <Ionicons name="checkmark" size={18} color="white" />}
                 </View>
 
-                <TouchableOpacity
-                style={[
-                    styles.boton,
-                    { opacity: aceptaTerminos ? 1 : 0.5 }
-                ]}
-                onPress={() => {
-                    if (aceptaTerminos) {
-                    cambiarVista(4);
-                    }
-                }}
+                {/* Texto al lado del checkbox */}
+                <Text style={styles.checkboxLabel}>Acepto los términos y condiciones</Text>
+            </TouchableOpacity>
+
+            {/* Botón para confirmar solo habilitado si acepta términos */}
+            <TouchableOpacity
+                style={[styles.boton, !aceptaTerminos && styles.botonDisabled]}
                 disabled={!aceptaTerminos}
-                >
-                <Text style={styles.textoBoton}>Firmar</Text>
-                </TouchableOpacity>
-
+                onPress={() => cambiarVista(4)}
+            >
+                <Text style={styles.textoBoton}>Confirmar</Text>
+            </TouchableOpacity>
             </View>
-            )}
+        )}
 
-
-            {/* Registro completado al plan*/}
-            {vista === 4 && (
+        {/* VISTA 4: Confirmación final */}
+        {vista === 4 && (
             <View style={styles.vista}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+                {/* Logo free */}
                 <Image
                     source={require('../../../assets/Plan_free.png')}
                     style={{
@@ -226,74 +247,156 @@ export default function PlanFreeScreen(){
                     resizeMode: 'contain',
                     }}
                 />
-                <Ionicons name="checkmark-circle-outline" size={width * 0.2} color="#E03B2E" />
+                {/* Icono de éxito */}
+                <Ionicons name="checkmark-circle" size={60} color="#E03B2E" style={{ marginBottom: 20 }} />
                 </View>
+            
+            
 
-                <Text style={styles.titulo}>Te acabas de registrar en el Plan Free.</Text>
+            {/* Título */}
+            <Text style={styles.titulo}>¡Listo!</Text>
 
-                <Text style={styles.subtext}>
-                Prepárate pa’ sudar, que aquí el único que se queda quietito es el que no hace nada.
-                {'\n\n'}
-                ¡Gracias por unirte! Ahora sí, a ver si aguantas los 30 días... ¡no te rajes antes!
-                </Text>
+            {/* Mensaje */}
+            <Text style={styles.regularItem}>Ya estás registrado en el plan gratuito. Ahora solo falta que empieces y lo des todo.</Text>
 
-                <TouchableOpacity style={styles.boton} onPress={() => navigation.replace('Maintabs')}>
-                <Text style={styles.textoBoton}>Continuar</Text>
-                </TouchableOpacity>
+            {/* Botón para ir al inicio */}
+            <TouchableOpacity style={styles.boton} onPress={() => navigation.replace('Maintabs')}>
+                <Text style={styles.textoBoton}>Empecemos</Text>
+            </TouchableOpacity>
             </View>
-            )}
+        )}
 
         </View>
     );
-}
+    }
 
-const styles = StyleSheet.create({
+    // Estilos organizados para toda la pantalla
+    const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        paddingTop: 60,
-        backgroundColor: 'white',
+        backgroundColor: 'white', // Fondo blanco para limpieza visual
+    },
+    backButton: {
+        marginBottom: 20,
+        padding: 10,
+        alignSelf: 'flex-start', // Alinea el botón a la izquierda
     },
     vista: {
-        alignItems: 'center'
+        flex: 1, // Ocupa todo el espacio disponible
+    },
+    introContainer: {
+        flexDirection: 'row', // Imagen y texto en fila
+        alignItems: 'center', // Centrar verticalmente
+        marginBottom: 25,
+    },
+    introImage: {
+        width: width * 0.25, // 25% del ancho pantalla
+        height: width * 0.25, // mismo alto que ancho para imagen cuadrada
+        marginRight: 15, // espacio entre imagen y texto
+        resizeMode: 'contain', // la imagen se ajusta sin deformarse
+    },
+    introTextContainer: {
+        flex: 1, // Ocupa todo el espacio restante
+    },
+    headerTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: '#222', // color oscuro para buen contraste
+    },
+    subtext: {
+        fontSize: 15,
+        color: '#555', // gris oscuro para texto menos intenso
+        lineHeight: 22, // altura de línea para mejor lectura
+    },
+    detailContainer: {
+        alignSelf: 'stretch', // ocupa todo el ancho
+        marginBottom: 30,
+    },
+    boldItem: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        marginTop: 12,
+        color: '#333',
+    },
+    regularItem: {
+        fontSize: 14,
+        marginLeft: 12,
+        marginTop: 5,
+        color: '#444',
+        lineHeight: 20,
     },
     titulo: {
         fontSize: 24,
-        marginBottom: 20
+        fontWeight: 'bold',
+        marginBottom: 18,
+        color: '#222',
+    },
+    weekContainer: {
+        marginTop: 15,
     },
     boton: {
-        backgroundColor: '#E03B2E',
-        padding: 12,
-        marginVertical: 8,
-        borderRadius: 16,
-        width: 180,
-        alignItems: 'center'
+        marginTop: 15,
+        backgroundColor: '#E03B2E', // color rojo principal
+        paddingVertical: 13,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    botonDisabled: {
+        backgroundColor: '#ccc', // gris para botón deshabilitado
     },
     textoBoton: {
         color: 'white',
-        fontSize: 16
+        fontSize: 16,
+        fontWeight: '600',
     },
-
-    headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
+    calendarContainer: {
+        marginTop: 10,
     },
-
-    subtext: {
-    fontSize: 14,
-    color: '#333',
+    calendarRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-around', // distribuir espacios igual entre días
+        marginVertical: 2,
     },
-
-    boldItem: {
-    fontWeight: 'bold',
-    marginTop: 10,
+    calendarHeader: {
+        flex: 1,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        color: '#E03B2E', // rojo para encabezados
     },
-
-    regularItem: {
-    fontSize: 14,
-    marginBottom: 6,
-    color: '#444',
+    calendarDay: {
+        flex: 1,
+        textAlign: 'center',
+        color: '#555',
+        paddingVertical: 6,
     },
-
-})
+    monthText: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#555',
+        marginBottom: 10,
+    },
+    checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 25,
+    },
+    checkbox: {
+        width: 25,
+        height: 25,
+        borderWidth: 2,
+        borderColor: '#E03B2E',
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    checkboxChecked: {
+        backgroundColor: '#E03B2E',
+    },
+    checkboxLabel: {
+        fontSize: 14,
+        color: '#333',
+    },
+});
