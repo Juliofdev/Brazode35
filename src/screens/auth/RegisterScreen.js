@@ -27,7 +27,7 @@ export default function RegisterScreen({ navigation }) {
         }
 
         try {
-            const response = await fetch("http://192.168.18.35/brazode35_api/register.php", {
+            const response = await fetch("https://emcservices.tech/register.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

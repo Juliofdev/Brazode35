@@ -1,9 +1,10 @@
 // /src/screens/auth/LoginScreen.js
-// ip local 192.168.18.35
 
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { Ionicons, AntDesign, FontAwesome } from '@expo/vector-icons'; // Íconos para la UI
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 // Función para alertar funciones no disponibles
 const mostrarAlerta = () => {
@@ -55,7 +56,7 @@ export default function LoginScreen({ navigation }) {
                     }
 
                     try {
-                        const response = await fetch("http://192.168.18.35/brazode35_api/login.php", {
+                        const response = await fetch("https://emcservices.tech/login.php", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ email, password }),
@@ -63,6 +64,7 @@ export default function LoginScreen({ navigation }) {
 
                         const data = await response.json();
                         if (data.success) {
+                            await AsyncStorage.setItem('usuario', JSON.stringify(data.user));
                             alert("Bienvenido " + data.user.nombre);
                             navigation.replace("Planing"); // Redirige a pantalla principal
                         } else {

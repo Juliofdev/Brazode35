@@ -1,11 +1,12 @@
 // /src/screens/planes/PlanFreeScreen.js
 import React, { useState } from 'react';
-import { View, Text, Dimensions, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView, CheckBox, Dimensions, Image} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 // Obtener ancho de pantalla para dimensionar imágenes proporcionalmente
 const { width } = Dimensions.get('window');
+
 
 export default function PlanFreeScreen() {
     // Hook para navegación entre pantallas
@@ -77,6 +78,7 @@ export default function PlanFreeScreen() {
 
         {/* VISTA 1: Introducción al plan gratuito */}
         {vista === 1 && (
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.vista}>
             {/* Contenedor principal con imagen y texto lado a lado */}
             <View style={styles.introContainer}>
@@ -123,10 +125,12 @@ export default function PlanFreeScreen() {
                 <Text style={styles.textoBoton}>Continuar</Text>
             </TouchableOpacity>
             </View>
+            </ScrollView>
         )}
 
         {/* VISTA 2: Qué aprenderás en el plan */}
         {vista === 2 && (
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.vista}>
             {/* Título grande */}
             <Text style={styles.titulo}>¿Qué vas a aprender en estos 30 días?</Text>
@@ -168,10 +172,12 @@ export default function PlanFreeScreen() {
                 <Text style={styles.textoBoton}>Ver Calendario</Text>
             </TouchableOpacity>
             </View>
+            </ScrollView>
         )}
 
         {/* VISTA 3: Calendario y aceptación de términos */}
         {vista === 3 && (
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.vista}>
             {/* Título */}
             <Text style={styles.titulo}>Calendario</Text>
@@ -231,10 +237,12 @@ export default function PlanFreeScreen() {
                 <Text style={styles.textoBoton}>Confirmar</Text>
             </TouchableOpacity>
             </View>
+            </ScrollView>
         )}
 
         {/* VISTA 4: Confirmación final */}
         {vista === 4 && (
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.vista}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
                 {/* Logo free */}
@@ -264,6 +272,7 @@ export default function PlanFreeScreen() {
                 <Text style={styles.textoBoton}>Empecemos</Text>
             </TouchableOpacity>
             </View>
+            </ScrollView>
         )}
 
         </View>

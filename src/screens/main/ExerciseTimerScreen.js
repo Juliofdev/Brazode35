@@ -22,55 +22,68 @@ export default function PerfilScreen() {
   });
 
   useEffect(() => {
-     AsyncStorage.getItem("usuario").then(console.log); // <--- Mostrar contenido en consola
+    AsyncStorage.getItem("usuario").then(console.log); // Mostrar contenido
+
     const cargarUsuario = async () => {
       const jsonValue = await AsyncStorage.getItem("usuario");
       if (jsonValue) {
         const user = JSON.parse(jsonValue);
-        fetch("https://emcservices.tech/perfil.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id_usuario: user.id_usuario }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.success) {
-              setUsuario(user);
-              setForm({ ...form, ...data.usuario });
-            }
+
+        try {
+          const response = await fetch("https://emcservices.tech/perfil.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id_usuario: user.id_usuario }),
           });
+
+          const data = await response.json();
+          console.log("Datos recibidos:", data);
+
+          if (data.success) {
+            setUsuario(user);
+            setForm(data.usuario); // ✅ Copiar directamente
+          } else {
+            alert("Error al cargar perfil: " + data.message);
+          }
+        } catch (error) {
+          console.error("Error de red:", error);
+          alert("No se pudo conectar con el servidor.");
+        }
       }
     };
+
     cargarUsuario();
   }, []);
 
-const actualizarPerfil = async () => {
-  if (!usuario) return;
+  const actualizarPerfil = async () => {
+    if (!usuario) return;
 
-  console.log("Intentando actualizar perfil:", form); // 👈 Debug
+    console.log("Intentando actualizar perfil:", form);
 
-  try {
-    const response = await fetch("https://emcservices.tech/perfil.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, id_usuario: usuario.id_usuario, accion: "actualizar" }),
-    });
+    try {
+      const response = await fetch("https://emcservices.tech/perfil.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          id_usuario: usuario.id_usuario,
+          accion: "actualizar",
+        }),
+      });
 
-    const data = await response.json();
-    console.log("Respuesta del servidor:", data); // 👈 Debug
+      const data = await response.json();
+      console.log("Respuesta del servidor:", data);
 
-    if (data.success) {
-      alert("Perfil actualizado correctamente.");
-    } else {
-      alert("Error: " + data.message);
+      if (data.success) {
+        alert("Perfil actualizado correctamente.");
+      } else {
+        alert("Error: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor:", error);
+      alert("Error al conectar con el servidor.");
     }
-
-  } catch (error) {
-    console.error("Error al conectar con el servidor:", error); // 👈 Debug
-    alert("Error al conectar con el servidor.");
-  }
-};
-
+  };
 
   const renderCampo = (label, key, editable = true) => (
     <View style={styles.campoContainer}>
@@ -83,16 +96,22 @@ const actualizarPerfil = async () => {
         value={form[key]?.toString() || ""}
         onChangeText={(text) => setForm({ ...form, [key]: text })}
         editable={editable}
-        keyboardType={key === "altura" || key === "peso" ? "decimal-pad" : "default"}
+        keyboardType={
+          key === "altura" || key === "peso" ? "decimal-pad" : "default"
+        }
       />
     </View>
   );
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 40 }}
+    >
       <Text style={styles.title}>Mi Perfil</Text>
 
       {renderCampo("Nombre", "nombre")}
+      {renderCampo("Email", "email")} {/* 👈 añadido */}
       {renderCampo("Nivel físico", "nivel_fisico")}
       {renderCampo("Altura (cm)", "altura")}
       {renderCampo("Peso (kg)", "peso")}

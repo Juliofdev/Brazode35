@@ -49,7 +49,7 @@ export default function PlaningScreen({ navigation }) {
             <View style={{ backgroundColor: "#CE6363" }}>
                 <TouchableOpacity 
                     style={styles.section} 
-                    onPress={mostrarAlerta}  // Función no disponible muestra alerta
+                    onPress={() => { navigation.replace('PlanBasico') }}  // Función no disponible muestra alerta
                 >
                     {/* Texto a la izquierda */}
                     <View style={styles.rightContainer}>
@@ -75,7 +75,7 @@ export default function PlaningScreen({ navigation }) {
             <View style={{ backgroundColor: "#841D1D" }}>
                 <TouchableOpacity 
                     style={styles.section} 
-                    onPress={mostrarAlerta}  // Función no disponible muestra alerta
+                    onPress={() => { navigation.replace('PlanPremium') }}  // Función no disponible muestra alerta
                 >
                     {/* Imagen a la izquierda */}
                     <View style={styles.leftContainer}>
